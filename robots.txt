@@ -1,0 +1,8 @@
+# Krankengymnastik Wim Menzo
+# Die gesamte Website darf indexiert werden.
+
+User-agent: *
+Allow: /
+
+# DOMAIN EINTRAGEN: Zeile einkommentieren und die echte Adresse einsetzen.
+# Sitemap: https://DOMAIN-EINTRAGEN.de/sitemap.xml

@@ -30,6 +30,14 @@ Die Seite setzt **keine** Cookies und lädt nichts von fremden Servern. Einwilli
 
 Ausgelegt auf WCAG 2.1 AA: semantisches HTML, genau eine `h1`, Tastaturbedienung mit sichtbarem Fokus, Touch-Targets ab 44 px, Kontraste durchgehend über 4,5:1 (schlechtester Wert 5,88:1). `prefers-reduced-motion` schaltet sämtliche Animationen ab.
 
+## Suchmaschinen
+
+Die Seite ist auf lokale Suchen nach Physiotherapie in Wietmarschen-Lohne ausgerichtet: Titel und Beschreibung mit Ortsbezug, strukturierte Daten als verknüpfter Graph (`LocalBusiness`/`Physiotherapy` mit geprüften Koordinaten, Öffnungszeiten, Bewertung und allen 15 Leistungen), eine FAQ-Sektion sowie `robots.txt` und `sitemap.xml`.
+
+**Vor der Live-Schaltung** sind vier Stellen mit der echten Domain zu füllen — die Suche nach `DOMAIN-EINTRAGEN` findet alle. Bis dahin bleiben `canonical` und `og:url` bewusst leer: eine Angabe, die auf eine nicht existierende Domain zeigt, schadet mehr, als sie nützt.
+
+Die vollständige Anleitung samt Handlungsliste für das Google-Unternehmensprofil steht in **[GO-LIVE.md](GO-LIVE.md)**. Der Hinweis dort ist wichtig: Die Website ist nur einer von mehreren Faktoren — die Signale aus dem Unternehmensprofil wiegen bei lokalen Suchen deutlich schwerer.
+
 ## Offene Punkte
 
 Diese Inhalte liefert der Praxisinhaber; im Quelltext sind sie als `TODO` markiert:
