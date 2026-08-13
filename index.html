@@ -7,7 +7,9 @@
 <meta name="description" content="Physiotherapie in Wietmarschen-Lohne: Krankengymnastik, Manuelle Therapie, Bobath für Kinder und Erwachsene, Lymphdrainage, osteopathische Behandlung und CMD-Therapie. Praxis Wim Menzo, Hauptstraße 18 — Termine unter 05908 217.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#003FA3">
-<link rel="canonical" href="https://www.kg-menzo.de/">
+<!-- TODO: canonical + og:url eintragen, sobald die Domain feststeht.
+     Bewusst leer gelassen: eine falsche canonical-Angabe schadet der Auffindbarkeit
+     mehr, als eine fehlende nützt. -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:title" content="Krankengymnastik Wim Menzo — Physiotherapie in Wietmarschen-Lohne">
@@ -18,7 +20,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["Physiotherapy", "MedicalBusiness", "LocalBusiness"],
+  "@type": ["Physiotherapy", "MedicalClinic", "LocalBusiness"],
   "name": "Krankengymnastik Wim Menzo",
   "description": "Praxis für Physiotherapie in Wietmarschen-Lohne mit Krankengymnastik, Manueller Therapie, Bobath für Kinder und Erwachsene, Manueller Lymphdrainage, osteopathischer Behandlung und CMD-Therapie.",
   "address": {
@@ -35,8 +37,8 @@
   "founder": { "@type": "Person", "name": "Wim Menzo", "jobTitle": "Physiotherapeut / Krankengymnast" },
   "areaServed": ["Wietmarschen", "Lohne", "Grafschaft Bentheim"],
   "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "08:15", "closes": "19:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "08:15", "closes": "17:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["https://schema.org/Monday","https://schema.org/Tuesday","https://schema.org/Wednesday","https://schema.org/Thursday"], "opens": "08:15", "closes": "19:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "https://schema.org/Friday", "opens": "08:15", "closes": "17:00" }
   ],
   "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.5", "reviewCount": "12", "bestRating": "5", "worstRating": "1" },
   "availableService": [
@@ -99,7 +101,17 @@
 *,*::before,*::after{ box-sizing:border-box; }
 /* muss vor allen display-Regeln greifen, sonst schlägt das hidden-Attribut fehl */
 [hidden]{ display:none !important; }
-html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+/* Wurzelgröße statt Body-Größe: rem-Werte beziehen sich auf die Wurzel, nicht auf
+   den Body. Ohne diese Anhebung wären alle rem-Angaben unter 1 an 16px gemessen
+   worden — Fließtext wäre real bei 15px gelandet. Prozentwerte statt px, damit
+   eine im Browser eingestellte größere Schrift weiterhin durchschlägt.
+   106,25 % = 17px, 112,5 % = 18px bei Standardeinstellung. */
+html{
+  font-size:106.25%;
+  -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth;
+}
+@media (min-width:900px){ html{ font-size:112.5%; } }
 @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
 
 body{
@@ -107,14 +119,18 @@ body{
   background:var(--c-white);
   color:var(--c-ink);
   font-family:var(--font-sans);
-  font-size:17px;
+  font-size:1rem;
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
   /* clip statt hidden: hidden würde einen Scroll-Container erzeugen und position:sticky brechen */
   overflow-x:clip;
 }
-@media (min-width:900px){ body{ font-size:18px; } }
-body.is-locked{ overflow:hidden; }
+body.is-locked{
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+/* iOS Safari scrollt sonst die Seite hinter dem offenen Menü weiter */
+html:has(body.is-locked){ overflow:hidden; }
 
 img,svg{ display:block; max-width:100%; }
 button{ font:inherit; color:inherit; }
@@ -176,6 +192,7 @@ a:hover{ color:var(--c-magenta); }
 .brand{
   display:flex; align-items:center;
   flex:0 0 auto;
+  min-height:46px;          /* Trefferfläche; die Leiste ist 66px hoch */
   border-radius:6px;
   text-decoration:none;
 }
@@ -195,7 +212,7 @@ a:hover{ color:var(--c-magenta); }
   position:relative;
   padding:10px 14px;
   color:var(--c-ink);
-  font-size:.97rem; font-weight:550;
+  font-size:1rem; font-weight:550;
   text-decoration:none;
   border-radius:var(--r-sm);
   transition:color .2s var(--ease);
@@ -253,17 +270,20 @@ a:hover{ color:var(--c-magenta); }
   padding:14px var(--gutter) 26px;
   max-height:calc(100dvh - var(--header-h));
   overflow-y:auto;
+  overscroll-behavior:contain;
 }
 .nav-mobile[hidden]{ display:none; }
-.nav-mobile a{
+.nav-mobile a:not(.btn){
   display:block;
   padding:15px 4px;
   font-size:1.14rem; font-weight:600;
   color:var(--c-ink); text-decoration:none;
   border-bottom:1px solid var(--c-line-soft);
 }
-.nav-mobile a:hover{ color:var(--c-blue); }
-.nav-mobile .btn{ margin-top:22px; width:100%; border-bottom:0; }
+.nav-mobile a:not(.btn):hover{ color:var(--c-blue); }
+/* :not(.btn) oben ist entscheidend — sonst ist .nav-mobile a spezifischer als
+   .btn--primary und der Anruf-Button bekäme dunklen Text auf Blau. */
+.nav-mobile .btn{ margin-top:22px; width:100%; font-size:1.06rem; }
 
 /* ============================================================
    Buttons
@@ -293,7 +313,7 @@ a:hover{ color:var(--c-magenta); }
   color:var(--c-magenta); border-color:var(--c-magenta);
   background:var(--c-tint-magenta);
 }
-.btn--sm{ min-height:46px; padding:10px 18px; font-size:.95rem; }
+.btn--sm{ min-height:46px; padding:10px 18px; font-size:1rem; }
 
 /* ============================================================
    Sections
@@ -309,7 +329,7 @@ a:hover{ color:var(--c-magenta); }
 .eyebrow{
   display:flex; align-items:center; gap:9px;
   margin:0 0 14px;
-  font-size:.775rem; font-weight:700;
+  font-size:.82rem; font-weight:700;
   letter-spacing:.13em; text-transform:uppercase;
   color:var(--c-blue);
 }
@@ -329,18 +349,26 @@ a:hover{ color:var(--c-magenta); }
 /* ============================================================
    Spine rail (Signature) + Mobile progress
    ============================================================ */
+/* scaleX statt width: eine Breitenänderung pro Frame kostet Layout und Paint,
+   eine Transform nur Compositing. */
 .progress{
   position:fixed; top:var(--header-h); left:0; z-index:88;
-  height:2px; width:0;
+  height:2px; width:100%;
+  transform:scaleX(0); transform-origin:left;
   background:linear-gradient(90deg,var(--c-blue),var(--c-magenta));
-  transition:width .1s linear;
+  transition:transform .1s linear;
+  will-change:transform;
 }
 .spine{ display:none; }
-@media (min-width:1240px){
+/* Die Achse erscheint erst ab 1440px: darunter reicht der Platz links nicht,
+   die Beschriftungen lägen auf den Karten. Bis dahin bleibt der Fortschrittsbalken. */
+@media (min-width:1440px){
   .progress{ display:none; }
   .spine{
     display:block;
-    position:fixed; left:26px; top:50%; transform:translateY(-50%);
+    position:fixed;
+    left:max(26px,calc((100vw - var(--wrap)) / 2 - 112px));
+    top:50%; transform:translateY(-50%);
     z-index:80;
     transition:opacity .3s var(--ease);
   }
@@ -426,7 +454,10 @@ a:hover{ color:var(--c-magenta); }
 .hero-lens{ opacity:0; }
 .hero-loaded .hero-lens{ animation:lensIn .8s var(--ease) forwards; }
 @keyframes lensIn{ from{ opacity:0; } to{ opacity:1; } }
-.hero-loaded .hero-float{ animation:float 9s ease-in-out 1.2s infinite; }
+/* Auf dem Container statt auf der SVG-Gruppe: Transform-Animationen auf
+   SVG-Kindelementen bekommen keine eigene Compositor-Ebene — der Browser
+   würde die Grafik dauerhaft neu rastern, auch außerhalb des Sichtfelds. */
+.hero-loaded .hero-art{ animation:float 9s ease-in-out 1.2s infinite; }
 @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
 
 /* ============================================================
@@ -446,10 +477,12 @@ a:hover{ color:var(--c-magenta); }
   padding:24px 22px 26px;
   transition:border-color .22s var(--ease),box-shadow .22s var(--ease),transform .22s var(--ease);
 }
+/* Keine Anhebung: die Karten sind Lesestoff, kein Klickziel. Ein Lift würde eine
+   Schaltfläche versprechen, die es nicht gibt — und bliebe auf Touch-Geräten
+   nach dem Tippen hängen. */
 .card:hover{
   border-color:#C2D3F0;
-  box-shadow:var(--shadow-lift);
-  transform:translateY(-2px);
+  box-shadow:var(--shadow-soft);
 }
 .card-icon{
   width:46px; height:46px;
@@ -466,12 +499,13 @@ a:hover{ color:var(--c-magenta); }
 .card h3{ color:var(--c-blue); }
 .card p{
   margin-top:9px;
-  font-size:.945rem; line-height:1.6;
+  font-size:1rem; line-height:1.6;
   color:var(--c-ink-soft);
 }
 .services-note{
   margin-top:26px;
-  font-size:.9rem; color:var(--c-ink-soft);
+  font-size:1rem; color:var(--c-ink-soft);
+  max-width:70ch;
 }
 
 /* ============================================================
@@ -507,12 +541,12 @@ a:hover{ color:var(--c-magenta); }
 }
 .photo-slot .slot-tag{
   align-self:flex-start;
-  font-size:.7rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  font-size:.76rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
   color:var(--c-magenta);
   background:#fff; border:1px solid #EBD3E0;
   padding:5px 10px; border-radius:99px;
 }
-.photo-slot p{ font-size:.9rem; color:var(--c-ink-soft); }
+.photo-slot p{ font-size:.95rem; color:var(--c-ink-soft); }
 
 /* ============================================================
    Patientenstimmen
@@ -562,7 +596,7 @@ blockquote footer{
 }
 .voices-disclaimer{
   margin-top:20px;
-  font-size:.85rem; color:var(--c-ink-soft);
+  font-size:.9rem; color:var(--c-ink-soft);
   max-width:70ch;
 }
 
@@ -583,7 +617,7 @@ blockquote footer{
 .contact-row svg{ flex:0 0 auto; width:22px; height:22px; margin-top:4px; }
 .contact-label{
   display:block;
-  font-size:.74rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  font-size:.8rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
   color:var(--c-ink-soft);
 }
 .contact-value{
@@ -592,6 +626,9 @@ blockquote footer{
 }
 a.contact-row:hover .contact-value{ color:var(--c-magenta); }
 a.contact-row:hover .ico{ stroke:var(--c-magenta); }
+/* Fax ist die einzige Zeile ohne Ziel — sie soll auch nicht so aussehen */
+div.contact-row .ico{ stroke:var(--c-ink-soft); }
+div.contact-row .contact-value{ font-weight:550; }
 
 .hours{
   background:#fff; border:1px solid var(--c-line);
@@ -618,7 +655,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 .hours-table{ width:100%; border-collapse:collapse; }
 .hours-table th,.hours-table td{
   padding:13px 8px;
-  text-align:left; font-size:.98rem;
+  text-align:left; font-size:1.02rem;
   border-bottom:1px solid var(--c-line-soft);
 }
 .hours-table th{ font-weight:550; color:var(--c-ink-soft); }
@@ -627,7 +664,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 .hours-table tr[data-today="true"] th{ color:var(--c-magenta); font-weight:700; }
 .hours-table tr[data-today="true"] td{ color:var(--c-magenta); }
 .hours-table tr[data-today="true"]{ background:var(--c-tint-magenta); }
-.hours-note{ margin-top:14px; font-size:.82rem; color:var(--c-ink-soft); }
+.hours-note{ margin-top:14px; font-size:.88rem; color:var(--c-ink-soft); }
 
 /* Karte */
 .map-block{ margin-top:clamp(28px,3.5vw,44px); }
@@ -650,7 +687,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 }
 .map-placeholder h3{ color:var(--c-blue); }
 .map-placeholder p{
-  max-width:52ch; font-size:.9rem; color:var(--c-ink-soft);
+  max-width:52ch; font-size:.95rem; color:var(--c-ink-soft);
 }
 .map-frame iframe{
   display:block; width:100%; height:340px; border:0;
@@ -673,7 +710,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   background:var(--c-ink);
   color:#C8CEE0;
   padding-block:clamp(46px,5vw,72px) 34px;
-  font-size:.94rem;
+  font-size:1rem;
 }
 .footer-top{
   display:grid; gap:30px;
@@ -711,7 +748,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 }
 .todo{
   display:inline-block; margin-bottom:8px;
-  font-size:.7rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  font-size:.76rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
   color:#FFC2E0;
   border:1px solid rgba(255,194,224,.4);
   border-radius:99px; padding:4px 10px;
@@ -719,7 +756,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 .footer-bottom{
   display:flex; flex-wrap:wrap; gap:8px 20px;
   margin-top:28px;
-  font-size:.85rem; color:#8E97B4;
+  font-size:.9rem; color:#8E97B4;
 }
 .footer-bottom button{
   background:none; border:0; padding:0;
@@ -727,6 +764,102 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   text-decoration:underline; text-underline-offset:3px;
 }
 .footer-bottom button:hover{ color:#fff; }
+
+/* ============================================================
+   Schwebende Aktionen (nach oben + Kontakt)
+   ============================================================ */
+.fab-stack{
+  position:fixed; z-index:110;
+  right:max(16px,env(safe-area-inset-right));
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex; flex-direction:column; align-items:flex-end; gap:12px;
+  visibility:visible;
+  transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s;
+}
+/* An die Inhaltsspalte gebunden: sonst klebt der Stapel auf 2560px allein im
+   Weiß, während er unterhalb 1300px auf den Karten liegt. */
+@media (min-width:900px){
+  .fab-stack{
+    right:max(28px,calc((100vw - var(--wrap)) / 2 - 60px),env(safe-area-inset-right));
+    bottom:calc(28px + env(safe-area-inset-bottom));
+  }
+}
+/* Vor dem Hero, bei offenem Consent-Banner und bei offenem Menü aus dem Weg.
+   visibility nimmt die Schaltflächen zugleich aus der Tab-Reihenfolge — sonst
+   landet der Tastaturfokus auf etwas Unsichtbarem. */
+.fab-stack[data-visible="false"],
+.fab-stack[data-blocked="true"]{
+  opacity:0; transform:translateY(10px);
+  pointer-events:none; visibility:hidden;
+  transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s .25s;
+}
+
+.fab{
+  width:56px; height:56px;
+  display:grid; place-items:center;
+  border:1px solid transparent; border-radius:50%;
+  cursor:pointer;
+  transition:background-color .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease),transform .2s var(--ease);
+}
+.fab svg{ width:24px; height:24px; }
+.fab--top{
+  background:#fff; border-color:var(--c-line);
+  box-shadow:var(--shadow-soft);
+}
+.fab--top .ico{ stroke:var(--c-blue); }
+.fab--top:hover{ border-color:var(--c-magenta); box-shadow:var(--shadow-lift); transform:translateY(-2px); }
+.fab--top:hover .ico{ stroke:var(--c-magenta); }
+
+/* Bewusst kein Hörer-Symbol: der Knopf öffnet ein Menü, während derselbe Hörer
+   im Header sofort wählt. Gleiches Zeichen, zwei Verhalten — deshalb Wort. */
+.fab--contact{
+  width:auto; height:56px; border-radius:28px;
+  padding:0 20px; gap:9px;
+  grid-auto-flow:column;
+  background:var(--c-blue); color:#fff;
+  font-size:1rem; font-weight:650;
+  box-shadow:0 4px 14px rgba(0,63,163,.30);
+}
+.fab--contact svg{ width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.fab--contact:hover{ background:var(--c-magenta); box-shadow:0 6px 20px rgba(164,25,96,.32); transform:translateY(-2px); }
+.fab--contact .fab-icon-close{ display:none; }
+.fab--contact[aria-expanded="true"] .fab-icon-open{ display:none; }
+.fab--contact[aria-expanded="true"] .fab-icon-close{ display:block; }
+
+.fab-contact{ position:relative; display:flex; justify-content:flex-end; }
+
+/* absolut positioniert, damit der Knopf „nach oben" beim Aufklappen nicht springt */
+.fab-actions{
+  position:absolute; right:0; bottom:calc(100% + 10px);
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:8px; align-items:flex-end;
+}
+.fab-action{
+  display:flex; align-items:center; gap:12px;
+  min-height:56px; padding:8px 16px 8px 10px;
+  background:#fff; border:1px solid var(--c-line); border-radius:28px;
+  box-shadow:var(--shadow-lift);
+  text-decoration:none; color:var(--c-ink);
+  transition:border-color .2s var(--ease),background-color .2s var(--ease);
+  animation:fabIn .28s var(--ease) backwards;
+}
+.fab-action:hover{ border-color:var(--c-magenta); background:var(--c-tint-magenta); color:var(--c-ink); }
+.fab-action__icon{
+  flex:0 0 auto; width:38px; height:38px;
+  display:grid; place-items:center;
+  background:var(--c-tint-blue); border-radius:50%;
+}
+.fab-action:hover .fab-action__icon{ background:#fff; }
+.fab-action__icon svg{ width:19px; height:19px; }
+.fab-action__text{ display:flex; flex-direction:column; line-height:1.25; }
+.fab-action__text strong{ font-size:.95rem; font-weight:650; }
+.fab-action__text small{ font-size:.82rem; color:var(--c-ink-soft); }
+.fab-action:hover .fab-action__text small{ color:var(--c-magenta); }
+
+@keyframes fabIn{
+  from{ opacity:0; transform:translateY(8px) scale(.97); }
+  to{ opacity:1; transform:none; }
+}
 
 /* ============================================================
    Consent
@@ -757,20 +890,26 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
 }
 .consent-details[hidden]{ display:none; }
 .switch-row{
-  display:flex; gap:14px; align-items:flex-start;
+  display:flex; gap:14px; align-items:center;
   padding:14px 0;
   border-bottom:1px solid var(--c-line-soft);
 }
 .switch-row:last-child{ border-bottom:0; }
 .switch-text{ flex:1 1 auto; }
-.switch-text strong{ display:block; font-size:.98rem; }
-.switch-text span{ display:block; margin-top:3px; font-size:.86rem; color:var(--c-ink-soft); }
+.switch-text strong{ display:block; font-size:1rem; }
+.switch-text span{ display:block; margin-top:3px; font-size:.88rem; color:var(--c-ink-soft); }
 .switch{
   flex:0 0 auto; position:relative;
-  width:52px; height:30px; margin-top:2px;
+  width:52px; height:30px;
   border-radius:99px; border:1px solid var(--c-line);
   background:#EFF2F8; cursor:pointer;
   transition:background-color .2s var(--ease),border-color .2s var(--ease);
+}
+/* Die sichtbare Größe bleibt, die Trefferfläche wächst auf 60 × 44 px.
+   inset löst gegen die Padding-Box auf, die durch den 1px-Rahmen nur
+   28 × 50 px misst: 28+16 = 44, 50+10 = 60. */
+.switch::before{
+  content:""; position:absolute; inset:-8px -5px;
 }
 .switch::after{
   content:""; position:absolute; top:3px; left:3px;
@@ -792,7 +931,10 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   opacity:1; transform:none;
   transition:opacity .55s var(--ease),transform .55s var(--ease);
 }
-.reveal-stagger.is-in > *{ animation:riseIn .5s var(--ease) both; }
+/* backwards statt both: mit "both" bleibt der Endkeyframe (transform:none) nach
+   Ablauf aktiv, und Animationen schlagen normale Deklarationen — jede spätere
+   transform-Regel, etwa beim Hover, wäre damit wirkungslos. */
+.reveal-stagger.is-in > *{ animation:riseIn .5s var(--ease) backwards; }
 @keyframes riseIn{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
 
 @media (prefers-reduced-motion:reduce){
@@ -804,7 +946,115 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   .reveal{ opacity:1; transform:none; }
   .vertebra,.hero-lens{ opacity:1; }
 }
+
+/* ============================================================
+   Breiten-Korrekturen
+   ============================================================ */
+
+/* Kleinstgeräte: Hero so straffen, dass der Anruf-Button über der Falte bleibt */
+@media (max-width:359px){
+  .section--hero{ padding-block:26px 40px; }
+  h1{ font-size:1.95rem; }
+  .hero-sub{ margin-top:14px; font-size:1rem; }
+  .hero-actions{ display:grid; gap:10px; margin-top:22px; }
+  .hero-actions .btn{ width:100%; padding:13px 12px; }
+  .fab{ height:48px; }
+  .fab--top{ width:48px; }
+  .fab svg{ width:21px; height:21px; }
+  .fab-stack{ gap:10px; }
+  .fab-action{ min-height:48px; }
+  .fab-action__icon{ width:34px; height:34px; }
+}
+
+/* Einwilligungs-Banner: darf den Bildschirm nicht sprengen. Ohne max-height wuchs
+   es aufgeklappt auf 1125px bei 568px Bildschirmhöhe — die Entscheidungs-Buttons
+   lagen dann außerhalb und waren nicht erreichbar. */
+@media (max-width:559px){
+  .consent{ padding-top:16px; max-height:calc(100dvh - 12px); }
+  .consent-inner{
+    display:flex; flex-direction:column; min-height:0;
+    max-height:calc(100dvh - 52px - env(safe-area-inset-bottom));
+  }
+  .consent p{ font-size:.9rem; line-height:1.5; }
+  .consent-details{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; }
+  .consent-actions{ flex:0 0 auto; gap:8px; margin-top:14px; }
+  .consent-actions .btn{ min-height:48px; }
+  /* „Einstellungen“ als Textlink statt dritter Vollbutton — spart eine Buttonhöhe,
+     ohne den Weg zu den Details zu verstellen */
+  #consent-toggle-details{
+    min-height:44px; border:0; background:none; box-shadow:none;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+}
+
+/* Hero-Überschrift: zwischen 960 und 1159px zerriss „Wietmarschen-Lohne“ am
+   Bindestrich, weil die Textspalte für den Clamp-Wert zu schmal ist. */
+@media (min-width:960px) and (max-width:1159px){
+  .hero h1{ font-size:clamp(2.4rem,1.1rem + 2.4vw,2.95rem); }
+}
+
+/* Sehr breite Bildschirme: ab 1240px änderte sich nichts mehr, auf 2560px lagen
+   links und rechts je 690px Leerfläche neben den durchgefärbten Bändern. */
+@media (min-width:1600px){ :root{ --wrap:1280px; --gutter:40px; } }
+@media (min-width:2200px){ :root{ --wrap:1360px; } }
+
+/* Das kurze Zitat wurde auf die Höhe des langen gezogen */
+@media (min-width:620px){ .quotes{ align-items:start; } }
+
+/* ch misst die Ziffernbreite, die schmaler ist als das mittlere Zeichen —
+   real ergaben 75ch rund 81 Zeichen pro Zeile. */
+.legal .legal-body{ max-width:68ch; }
+.consent p{ max-width:70ch; }
+
+/* Magenta auf dem dunklen Footer erreicht nur 2,35:1; WCAG verlangt 3:1
+   für Fokusindikatoren. */
+.site-footer :focus-visible{ outline-color:#FFC2E0; }
+
+/* Kleine Inline-Links waren nur 17–18px hoch. Der negative Außenabstand hält
+   den Zeilenfluss zusammen, während die Trefferfläche auf über 44px wächst. */
+.services-note a,
+.photo-slot p a,
+.footer-list a,
+.map-links a,
+.footer-bottom button{
+  display:inline-block;
+  padding-block:12px;
+  margin-block:-8px;
+}
+.footer-list li{ margin-bottom:2px; }
+
+/* ============================================================
+   Druckausgabe — Adresse und Öffnungszeiten auf Papier
+   ============================================================ */
+@media print{
+  .reveal,.reveal-stagger.is-in > *{
+    opacity:1 !important; transform:none !important; animation:none !important;
+  }
+  .vertebra,.hero-lens{ opacity:1 !important; }
+  .progress,.spine,.fab-stack,.consent,.skip-link,.burger,.call-mobile,
+  .nav-desktop,.hero-art,.map-frame,.map-revoke,.photo-slot,
+  .footer-bottom button{ display:none !important; }
+  .site-header{ position:static; box-shadow:none; border-bottom:1px solid #999; }
+  .site-footer{ background:#fff !important; color:var(--c-ink); padding-block:12px; }
+  .site-footer h2,.site-footer h3,.site-footer a,
+  .footer-brand p,.footer-bottom{ color:var(--c-ink) !important; }
+  .section{ padding-block:14px; }
+  .section--tint{ background:#fff; }
+  body{ font-size:11pt; }
+  a{ color:var(--c-ink); text-decoration:none; }
+  .card,.hours,.facts li,blockquote,.contact-list li{ break-inside:avoid; }
+  h1,h2,h3{ break-after:avoid; }
+}
 </style>
+
+<noscript><style>
+  /* Ohne JavaScript würden die 13 .reveal-Blöcke auf opacity:0 stehen bleiben —
+     Adresse, Telefonnummer und Öffnungszeiten wären unsichtbar. */
+  .reveal{ opacity:1 !important; transform:none !important; }
+  .reveal-stagger.is-in > *{ animation:none !important; }
+  .vertebra,.hero-lens{ opacity:1 !important; }
+  .spine,.progress,.fab-stack{ display:none !important; }
+</style></noscript>
 </head>
 <body>
 
@@ -843,7 +1093,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
     <a href="#kontakt">Kontakt</a>
     <a class="btn btn--primary" href="tel:+495908217">
       <svg class="ico" style="stroke:#fff" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h3l1.5 4-2 1.4a12 12 0 0 0 6.1 6.1l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></svg>
-      05908 217 anrufen
+      Anrufen · 05908 217
     </a>
   </nav>
 </header>
@@ -1017,7 +1267,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
         </article>
 
         <article class="card">
-          <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><path d="M14.6 21c-2.6 0-4.2-1.6-4.6-3.6-.4-2-1.2-3-2.6-4.2-1.6-1.4-2.4-3.2-2.4-5.4C5 4.6 7.4 2.6 10.4 2.6c3.4 0 5.6 2.4 5.6 6.2 0 2-.4 3.4-.4 5 0 1.4.6 2 1.8 2.4 1 .4 1.6 1.2 1.6 2.4 0 1.4-1.2 2.4-4.4 2.4Z"/></g><circle class="ico-d" cx="9.4" cy="7.6" r="1.7"/><circle class="ico-d" cx="12.8" cy="10.4" r="1.3"/></svg></div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><path d="M14.6 21c-2.6 0-4.2-1.6-4.6-3.6-.4-2-1.2-3-2.6-4.2-1.6-1.4-2.4-3.2-2.4-5.4C5 4.6 7.4 2.6 10.4 2.6c3.4 0 5.6 2.4 5.6 6.2 0 2-.4 3.4-.4 5 0 1.4.6 2 1.8 2.4 1 .4 1.6 1.2 1.6 2.4 0 1.4-1.2 2.4-4.4 2.4Z"/></g><circle class="ico-d" cx="9.4" cy="7.6" r="1.7"/></svg></div>
           <h3>Fußreflexzonenmassage</h3>
           <p>Manuelle Behandlung definierter Zonen an den Füßen. Die Griffe werden ruhig und mit spürbarem Druck ausgeführt. Als ergänzende Anwendung zu anderen Therapieformen.</p>
         </article>
@@ -1075,9 +1325,9 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
       </div>
 
       <!-- TODO: echtes Foto einsetzen — Praxis-/Teamfoto ersetzt diesen Platzhalter -->
-      <div class="photo-slot reveal" role="img" aria-label="Platzhalter für ein Foto der Praxis">
+      <div class="photo-slot reveal">
         <span class="slot-tag">Platzhalter</span>
-        <p>Hier steht später ein echtes Foto der Praxis oder des Teams. Bis zum Vorliegen freigegebener Aufnahmen bleibt diese Fläche bewusst leer — Stockfotos würden einen falschen Eindruck vermitteln.</p>
+        <p>Fotos aus den Behandlungsräumen folgen. Wer vorab wissen möchte, wie es hier zugeht, ruft am besten kurz an: <a href="tel:+495908217">05908 217</a>.</p>
       </div>
     </div>
   </section>
@@ -1162,17 +1412,17 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
               </div>
             </li>
             <li>
-              <div class="contact-row">
+              <a class="contact-row" href="https://www.google.com/maps/search/?api=1&amp;query=Hauptstra%C3%9Fe+18%2C+49835+Wietmarschen-Lohne" target="_blank" rel="noopener">
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.4s7-5.9 7-11a7 7 0 1 0-14 0c0 5.1 7 11 7 11Z"/><circle cx="12" cy="10.2" r="2.6"/></svg>
-                <span><span class="contact-label">Adresse</span><span class="contact-value">Hauptstraße 18<br>49835 Wietmarschen-Lohne</span></span>
-              </div>
+                <span><span class="contact-label">Adresse · Route öffnen ↗</span><span class="contact-value">Hauptstraße 18<br>49835 Wietmarschen-Lohne</span></span>
+              </a>
             </li>
           </ul>
 
           <div class="hero-actions">
             <a class="btn btn--primary" href="tel:+495908217">
               <svg class="ico" style="stroke:#fff" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h3l1.5 4-2 1.4a12 12 0 0 0 6.1 6.1l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></svg>
-              Jetzt anrufen
+              Anrufen · 05908 217
             </a>
             <a class="btn btn--ghost" href="mailto:kgmenzo@gmx.de">E-Mail schreiben</a>
           </div>
@@ -1219,7 +1469,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
           <a href="https://www.google.com/maps/search/?api=1&amp;query=Hauptstra%C3%9Fe+18%2C+49835+Wietmarschen-Lohne" target="_blank" rel="noopener">
             Route in Google Maps öffnen ↗
           </a>
-          <button class="map-revoke" type="button" id="map-revoke" hidden>Karte wieder ausblenden und Einwilligung widerrufen</button>
+          <button class="map-revoke" type="button" id="map-revoke" hidden>Karte ausblenden</button>
         </p>
       </div>
     </div>
@@ -1297,17 +1547,55 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   </div>
 </footer>
 
+<!-- ================= SCHWEBENDE AKTIONEN ================= -->
+<div class="fab-stack" id="fab-stack" data-visible="false">
+  <button class="fab fab--top" id="fab-top" type="button" aria-label="Zum Seitenanfang">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><path d="M12 19.5V5.2"/><path d="m5.6 11.6 6.4-6.4 6.4 6.4"/></g></svg>
+  </button>
+
+  <div class="fab-contact">
+    <ul class="fab-actions" id="fab-actions" hidden>
+      <li>
+        <a class="fab-action" href="tel:+495908217">
+          <span class="fab-action__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><path d="M6.5 3.5h3l1.5 4-2 1.4a12 12 0 0 0 6.1 6.1l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></g></svg></span>
+          <span class="fab-action__text"><strong>Anrufen</strong><small>05908 217</small></span>
+        </a>
+      </li>
+      <li>
+        <a class="fab-action" href="mailto:kgmenzo@gmx.de">
+          <span class="fab-action__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><rect x="2.8" y="4.8" width="18.4" height="14.4" rx="2.4"/><path d="m3.4 6.6 8.6 6 8.6-6"/></g></svg></span>
+          <span class="fab-action__text"><strong>E-Mail</strong><small>kgmenzo@gmx.de</small></span>
+        </a>
+      </li>
+      <li>
+        <a class="fab-action" href="https://www.google.com/maps/search/?api=1&amp;query=Hauptstra%C3%9Fe+18%2C+49835+Wietmarschen-Lohne" target="_blank" rel="noopener">
+          <span class="fab-action__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="ico"><path d="M12 21.4s7-5.9 7-11a7 7 0 1 0-14 0c0 5.1 7 11 7 11Z"/><circle cx="12" cy="10.2" r="2.6"/></g></svg></span>
+          <span class="fab-action__text"><strong>Route</strong><small>Hauptstraße 18 ↗</small></span>
+        </a>
+      </li>
+    </ul>
+
+    <button class="fab fab--contact" id="fab-toggle" type="button" aria-expanded="false" aria-controls="fab-actions">
+      <svg class="fab-icon-open" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+      <svg class="fab-icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      <span>Kontakt</span>
+    </button>
+  </div>
+</div>
+
 <!-- ================= CONSENT ================= -->
 <div class="consent" id="consent" role="dialog" aria-labelledby="consent-title" aria-describedby="consent-text" hidden>
   <div class="consent-inner">
     <h2 id="consent-title">Ihre Einwilligung</h2>
+    <!-- Erste Ebene bewusst kurz: auf einem 320px-Gerät belegte der lange Text
+         zusammen mit drei Vollbuttons den ganzen Bildschirm. Alle Pflichtangaben
+         (Anbieter, Zweck, Drittland, Speicherdauer) stehen unverändert im
+         Einstellungs-Bereich, der vor der Entscheidung erreichbar ist. -->
     <p id="consent-text">
-      Diese Website setzt keine Analyse- oder Marketing-Cookies. Einwilligungspflichtig ist
-      allein die Karte von Google Maps im Abschnitt „Kontakt &amp; Anfahrt“: Beim Laden werden
-      Ihre IP-Adresse und Gerätedaten an Google Ireland Ltd. übertragen, möglicherweise auch in
-      die USA (Art. 49 Abs. 1 lit. a DSGVO). Ohne Ihre Zustimmung wird nichts geladen. Sie können
-      Ihre Entscheidung jederzeit im Fußbereich unter „Cookie-Einstellungen“ ändern.
-      Näheres in der <a href="#datenschutz" id="consent-privacy-link">Datenschutzerklärung</a>.
+      Diese Website setzt keine Cookies für Analyse oder Werbung. Nur die Google-Karte
+      im Abschnitt „Kontakt &amp; Anfahrt“ lädt erst, wenn Sie zustimmen —
+      dabei werden Daten an Google übertragen.
+      <a href="#datenschutz" id="consent-privacy-link">Datenschutzerklärung</a>
     </p>
 
     <div class="consent-actions">
@@ -1327,7 +1615,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
       <div class="switch-row">
         <span class="switch-text">
           <strong>Externe Karte (Google Maps)</strong>
-          <span>Lädt die Kartenansicht der Praxis von Google. Anbieter: Google Ireland Ltd., Dublin. Zweck: Darstellung des Standorts und Routenplanung. Übertragung: IP-Adresse, Gerätedaten; Drittlandtransfer USA möglich.</span>
+          <span>Lädt die Kartenansicht der Praxis von Google. Anbieter: Google Ireland Ltd., Dublin. Zweck: Darstellung des Standorts und Routenplanung. Übertragung: IP-Adresse und Gerätedaten, Drittlandtransfer in die USA möglich (Art. 49 Abs. 1 lit. a DSGVO). Ihre Entscheidung können Sie jederzeit im Fußbereich ändern.</span>
         </span>
         <button class="switch" type="button" role="switch" aria-checked="false" id="switch-maps" aria-label="Externe Karte von Google Maps erlauben"></button>
       </div>
@@ -1353,14 +1641,105 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   var header = $('#header');
   var progress = $('#progress');
 
-  function onScroll() {
+  /* Scrollhöhe nur bei Bedarf messen und Schreibzugriffe an einen Frame binden,
+     damit im Scroll-Handler nicht abwechselnd gelesen und geschrieben wird. */
+  var maxScroll = 0;
+  function measure() {
+    maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  }
+
+  var ticking = false;
+  var lastScrolled = null;
+  function render() {
+    ticking = false;
     var y = window.scrollY || document.documentElement.scrollTop;
-    header.setAttribute('data-scrolled', y > 8 ? 'true' : 'false');
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+    var scrolled = y > 8 ? 'true' : 'false';
+    /* nur schreiben, wenn sich der Zustand ändert — jeder Attributschreibzugriff
+       invalidiert sonst pro Frame die Styles */
+    if (scrolled !== lastScrolled) {
+      header.setAttribute('data-scrolled', scrolled);
+      lastScrolled = scrolled;
+    }
+    progress.style.transform = 'scaleX(' + (maxScroll > 0 ? Math.min(y / maxScroll, 1) : 0) + ')';
+    updateFabs(y);
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(render);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+
+  /* ---------- Schwebende Aktionen ---------- */
+  var fabStack  = $('#fab-stack');
+  var fabToggle = $('#fab-toggle');
+  var fabActions = $('#fab-actions');
+  var fabTop    = $('#fab-top');
+  var FAB_AT = 600;
+
+  function updateFabs(y) {
+    var show = y > FAB_AT;
+    if (!show && fabToggle.getAttribute('aria-expanded') === 'true') setFab(false);
+    fabStack.setAttribute('data-visible', String(show));
+  }
+
+  /* Der Stapel tritt zurück, solange Consent-Banner oder mobiles Menü offen sind,
+     und in der Kontaktsektion: dort ist er redundant und liegt auf schmalen
+     Geräten genau über den antippbaren Kontaktzeilen. */
+  var inKontakt = false;
+  function fabShouldHide() {
+    return inKontakt ||
+      burger.getAttribute('aria-expanded') === 'true' ||
+      !consentEl.hidden;
+  }
+  function setFabBlocked(blocked) {
+    if (blocked && fabToggle.getAttribute('aria-expanded') === 'true') setFab(false);
+    fabStack.setAttribute('data-blocked', String(blocked));
+  }
+
+  function setFab(open) {
+    fabToggle.setAttribute('aria-expanded', String(open));
+    fabActions.hidden = !open;
+    if (open) {
+      $$('.fab-action', fabActions).forEach(function (a, i) {
+        a.style.animationDelay = (i * 40) + 'ms';
+      });
+      var first = $('.fab-action', fabActions);
+      if (first) first.focus();
+    }
+  }
+
+  fabToggle.addEventListener('click', function () {
+    setFab(fabToggle.getAttribute('aria-expanded') !== 'true');
+  });
+  $$('.fab-action', fabActions).forEach(function (a) {
+    a.addEventListener('click', function () { setFab(false); });
+  });
+  document.addEventListener('click', function (e) {
+    if (fabToggle.getAttribute('aria-expanded') !== 'true') return;
+    if (!e.target.closest('.fab-contact')) setFab(false);
+  });
+
+  fabTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    /* Der Fokus muss mitwandern, sonst steht der Tastaturfokus weiterhin
+       am Seitenende, während die Ansicht oben ist. */
+    var brand = $('.brand');
+    if (brand) brand.focus({ preventScroll: true });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var kontaktSec = document.getElementById('kontakt');
+    if (kontaktSec) {
+      new IntersectionObserver(function (entries) {
+        inKontakt = entries[0].isIntersecting;
+        setFabBlocked(fabShouldHide());
+      }, { threshold: 0 }).observe(kontaktSec);
+    }
+  }
+
+  measure();
+  render();
 
   /* ---------- Mobiles Menü ---------- */
   var burger = $('#burger');
@@ -1371,6 +1750,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
     burger.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
     navMobile.hidden = !open;
     document.body.classList.toggle('is-locked', open);
+    setFabBlocked(fabShouldHide());
   }
   burger.addEventListener('click', function () {
     setMenu(burger.getAttribute('aria-expanded') !== 'true');
@@ -1381,13 +1761,20 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (burger.getAttribute('aria-expanded') === 'true') { setMenu(false); burger.focus(); }
+    else if (fabToggle.getAttribute('aria-expanded') === 'true') { setFab(false); fabToggle.focus(); }
     /* Esc ohne vorherige Entscheidung = nur notwendige; liegt bereits eine
        Entscheidung vor, wird sie nicht still überschrieben. */
     else if (!consentEl.hidden) { if (read()) closeBanner(); else rejectAll(); }
   });
+  var resizeTick = false;
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 1000 && burger.getAttribute('aria-expanded') === 'true') setMenu(false);
-  });
+    /* measure() liest scrollHeight und erzwingt damit ein Layout — auf Mobilgeräten
+       feuert resize beim Ein- und Ausblenden der Adressleiste im Dauerfeuer. */
+    if (resizeTick) return;
+    resizeTick = true;
+    requestAnimationFrame(function () { resizeTick = false; measure(); render(); });
+  }, { passive: true });
 
   /* ---------- Wirbelsäulen-Navigation ---------- */
   var SECTIONS = [
@@ -1511,18 +1898,68 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   /* ---------- Öffnungszeiten-Status ---------- */
   var HOURS = { 1: [495, 1140], 2: [495, 1140], 3: [495, 1140], 4: [495, 1140], 5: [495, 1020] };
   (function openingStatus() {
-    var now = new Date();
-    var day = now.getDay();
-    var mins = now.getHours() * 60 + now.getMinutes();
-    var row = $('.hours-table tr[data-day="' + day + '"]');
-    if (row) row.setAttribute('data-today', 'true');
-
-    var span = HOURS[day];
-    var isOpen = !!span && mins >= span[0] && mins < span[1];
     var badge = $('#status');
-    badge.setAttribute('data-open', String(isOpen));
-    badge.textContent = isOpen ? 'Jetzt geöffnet' : 'Zurzeit geschlossen';
-    badge.hidden = false;
+    var DAY_INDEX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    var DAY_NAMES = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
+    /* Maßgeblich ist die Zeit in der Praxis, nicht die des Endgeräts: ein Gerät
+       in einer anderen Zeitzone hätte sonst „Jetzt geöffnet" gemeldet, während
+       die Praxis geschlossen ist. */
+    var fmt = null;
+    try {
+      fmt = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Berlin', weekday: 'short',
+        hour: '2-digit', minute: '2-digit', hour12: false
+      });
+    } catch (e) { fmt = null; }
+
+    function praxisZeit() {
+      if (!fmt) {
+        var n = new Date();
+        return { day: n.getDay(), mins: n.getHours() * 60 + n.getMinutes() };
+      }
+      var p = {};
+      fmt.formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      return { day: DAY_INDEX[p.weekday], mins: (Number(p.hour) % 24) * 60 + Number(p.minute) };
+    }
+
+    function hhmm(m) {
+      return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + (m % 60)).slice(-2);
+    }
+
+    /* „Geschlossen" allein lässt die Frage offen, wann man anrufen kann. */
+    function naechsteOeffnung(day, mins) {
+      for (var i = 0; i <= 7; i++) {
+        var d = (day + i) % 7;
+        var span = HOURS[d];
+        if (!span) continue;
+        if (i === 0 && mins >= span[0]) continue;
+        var wann = i === 0 ? 'heute' : i === 1 ? 'morgen' : DAY_NAMES[d];
+        return wann + ' ab ' + hhmm(span[0]) + ' Uhr';
+      }
+      return '';
+    }
+
+    function tick() {
+      var t = praxisZeit();
+      $$('.hours-table tr[data-today]').forEach(function (r) { r.removeAttribute('data-today'); });
+      var row = $('.hours-table tr[data-day="' + t.day + '"]');
+      if (row) row.setAttribute('data-today', 'true');
+
+      var span = HOURS[t.day];
+      var isOpen = !!span && t.mins >= span[0] && t.mins < span[1];
+      badge.setAttribute('data-open', String(isOpen));
+      if (isOpen) {
+        badge.textContent = 'Jetzt geöffnet · bis ' + hhmm(span[1]) + ' Uhr';
+      } else {
+        var next = naechsteOeffnung(t.day, t.mins);
+        badge.textContent = next ? 'Geschlossen · wieder ' + next : 'Zurzeit geschlossen';
+      }
+      badge.hidden = false;
+    }
+
+    tick();
+    setInterval(tick, 60000);
   })();
 
   /* ---------- Consent ---------- */
@@ -1566,12 +2003,14 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
     mapFrame.appendChild(f);
     mapHolder.hidden = true;
     mapRevoke.hidden = false;
+    measure(); render();
   }
   function hideMap() {
     var f = $('iframe', mapFrame);
     if (f) f.parentNode.removeChild(f);
     mapHolder.hidden = false;
     mapRevoke.hidden = true;
+    measure(); render();
   }
   function applyConsent(maps) {
     switchMaps.setAttribute('aria-checked', String(!!maps));
@@ -1583,6 +2022,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
     var current = read();
     switchMaps.setAttribute('aria-checked', String(!!(current && current.maps)));
     consentEl.hidden = false;
+    setFabBlocked(true);
     if (force) {
       detailsEl.hidden = false;
       toggleBtn.setAttribute('aria-expanded', 'true');
@@ -1594,6 +2034,7 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
     consentEl.hidden = true;
     detailsEl.hidden = true;
     toggleBtn.setAttribute('aria-expanded', 'false');
+    setFabBlocked(fabShouldHide());
     if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
     lastFocus = null;
   }
@@ -1621,19 +2062,17 @@ a.contact-row:hover .ico{ stroke:var(--c-magenta); }
   });
   $('#open-consent').addEventListener('click', function () { openBanner(true); });
 
-  /* Fokus im geöffneten Banner halten */
-  consentEl.addEventListener('keydown', function (e) {
-    if (e.key !== 'Tab') return;
-    var f = $$('button, [href], [role="switch"]:not([aria-disabled="true"])', consentEl)
-      .filter(function (el) { return el.offsetParent !== null; });
-    if (!f.length) return;
-    var first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
+  /* Bewusst keine Fokus-Falle: das Banner ist eine nicht-blockierende Leiste,
+     die Seite dahinter bleibt sichtbar und bedienbar. Eine Falle würde
+     Tastaturnutzer einsperren, während Mausnutzer weiterklicken dürfen. */
 
   /* Zwei-Klick-Lösung an der Karte — spiegelt den Consent-Status */
-  $('#map-load').addEventListener('click', function () { write(true); applyConsent(true); });
+  $('#map-load').addEventListener('click', function () {
+    write(true); applyConsent(true);
+    /* Die Entscheidung ist damit gefallen — sonst bleibt das Banner stehen
+       und fragt weiter, was es schon weiß. */
+    if (!consentEl.hidden) { lastFocus = mapRevoke; closeBanner(); }
+  });
   mapRevoke.addEventListener('click', function () {
     write(false); applyConsent(false);
     $('#map-load').focus();
