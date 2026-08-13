@@ -18,21 +18,13 @@
 <meta property="og:site_name" content="Krankengymnastik Wim Menzo">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- ══════════════════════════════════════════════════════════════════════════
-     DOMAIN EINTRAGEN — die vier Zeilen unten einkommentieren und
-     DOMAIN-EINTRAGEN.de durch die echte Adresse ersetzen. Dieselbe Adresse
-     zusätzlich in robots.txt, sitemap.xml und im JSON-LD weiter unten (Suche
-     nach "DOMAIN-EINTRAGEN") eintragen.
-
-     Bis dahin bleibt der Block auskommentiert: eine canonical-Angabe, die auf
-     eine nicht existierende Domain zeigt, schadet der Auffindbarkeit mehr als
-     eine fehlende. Details in GO-LIVE.md.
-     ══════════════════════════════════════════════════════════════════════════
-<link rel="canonical" href="https://DOMAIN-EINTRAGEN.de/">
-<meta property="og:url" content="https://DOMAIN-EINTRAGEN.de/">
-<meta property="og:image" content="https://DOMAIN-EINTRAGEN.de/og-bild.png">
+<link rel="canonical" href="https://lukabpunkt.github.io/KG-Wim-Menzo/">
+<meta property="og:url" content="https://lukabpunkt.github.io/KG-Wim-Menzo/">
+<meta property="og:image" content="https://lukabpunkt.github.io/KG-Wim-Menzo/og-bild.png">
 <meta property="og:image:alt" content="Krankengymnastik Wim Menzo — Physiotherapie in Wietmarschen-Lohne">
-     ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Live über GitHub Pages. Bei Umzug auf eine eigene Domain müssen canonical,
+     og:url, og:image, das JSON-LD unten sowie sitemap.xml und robots.txt auf die
+     neue Adresse zeigen — sonst verweist die neue Domain dauerhaft auf diese hier. -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23003FA3'/%3E%3Cg fill='%23ffffff'%3E%3Cellipse cx='15' cy='8' rx='3.1' ry='2.3'/%3E%3Cellipse cx='15' cy='14.6' rx='3.9' ry='2.7'/%3E%3Cellipse cx='15' cy='21.6' rx='4.3' ry='2.9'/%3E%3C/g%3E%3Ccircle cx='24' cy='24.5' r='4' fill='%23A41960'/%3E%3C/svg%3E">
 
 <script type="application/ld+json">
@@ -46,6 +38,9 @@
         "LocalBusiness"
       ],
       "@id": "#praxis",
+      "url": "https://lukabpunkt.github.io/KG-Wim-Menzo/",
+      "image": "https://lukabpunkt.github.io/KG-Wim-Menzo/og-bild.png",
+      "logo": "https://lukabpunkt.github.io/KG-Wim-Menzo/og-bild.png",
       "name": "Krankengymnastik Wim Menzo",
       "description": "Praxis für Physiotherapie in Wietmarschen-Lohne mit Krankengymnastik, Manueller Therapie, Bobath für Kinder und Erwachsene, Manueller Lymphdrainage, osteopathischer Behandlung und CMD-Therapie.",
       "address": {
@@ -186,6 +181,7 @@
     {
       "@type": "WebSite",
       "@id": "#website",
+      "url": "https://lukabpunkt.github.io/KG-Wim-Menzo/",
       "name": "Krankengymnastik Wim Menzo",
       "inLanguage": "de-DE",
       "publisher": {
@@ -250,12 +246,8 @@
 }
 </script>
 
-<!-- Nach dem Eintragen der Domain im JSON-LD oben im Knoten "#praxis" ergänzen:
-       "url":   "https://DOMAIN-EINTRAGEN.de/",
-       "image": "https://DOMAIN-EINTRAGEN.de/og-bild.png",
-       "logo":  "https://DOMAIN-EINTRAGEN.de/og-bild.png",
-       "sameAs": ["<URL des Google-Unternehmensprofils>"]
-     Bis dahin bewusst weggelassen — lieber keine Angabe als eine falsche. -->
+<!-- Noch offen: "sameAs" mit der URL des Google-Unternehmensprofils ergänzen,
+     sobald sie vorliegt. Siehe GO-LIVE.md. -->
 
 <style>
 /* ============================================================

@@ -4,5 +4,9 @@
 User-agent: *
 Allow: /
 
-# DOMAIN EINTRAGEN: Zeile einkommentieren und die echte Adresse einsetzen.
-# Sitemap: https://DOMAIN-EINTRAGEN.de/sitemap.xml
+Sitemap: https://lukabpunkt.github.io/KG-Wim-Menzo/sitemap.xml
+
+# Hinweis: Diese Datei liegt unter einem Unterpfad von github.io und wirkt dort
+# nicht als Crawling-Anweisung — dafür müsste sie im Wurzelverzeichnis der Domain
+# liegen. Da github.io keine einschränkende robots.txt ausliefert, ist Crawling
+# ohnehin erlaubt. Mit einer eigenen Domain greift die Datei dann wie vorgesehen.

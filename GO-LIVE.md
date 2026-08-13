@@ -16,26 +16,31 @@ Ein Profil existiert bereits — die 4,5 Sterne aus 12 Rezensionen stammen daher
 - [ ] **Öffnungszeiten** eintragen: Mo–Do 08:15–19:00, Fr 08:15–17:00, Sa/So geschlossen. Feiertage gesondert pflegen.
 - [ ] **Echte Fotos** hochladen — Außenansicht, Empfang, Behandlungsraum. Profile mit Fotos werden deutlich häufiger angeklickt.
 - [ ] **Rezensionen beantworten**, auch die älteren. Antworten sind ein eigenes Qualitätssignal.
-- [ ] Website-Feld auf die neue Domain setzen, sobald sie steht.
+- [ ] Website-Feld auf https://lukabpunkt.github.io/KG-Wim-Menzo/ setzen (bzw. später auf die eigene Domain).
 
-## 2. Domain und Live-Schaltung
+## 2. Search Console einrichten — die Seite ist live
 
-Die Website ist domain-fertig gebaut. Sobald die Adresse feststeht, sind es **vier Stellen**:
+Die Website läuft seit dem 13.08.2026 unter **https://lukabpunkt.github.io/KG-Wim-Menzo/** (GitHub Pages, HTTPS). Alle Adressangaben — `canonical`, `og:url`, strukturierte Daten, `sitemap.xml` — sind darauf eingestellt.
+
+- [ ] [Google Search Console](https://search.google.com/search-console) öffnen, Property vom Typ **URL-Präfix** mit genau dieser Adresse anlegen.
+- [ ] Bestätigung über die HTML-Datei-Methode: Google gibt eine Datei wie `google1a2b3c.html` aus; diese ins Repository legen, committen, dann in der Search Console auf „Bestätigen" klicken.
+- [ ] Unter „Sitemaps" `sitemap.xml` einreichen.
+- [ ] Über „URL-Prüfung" die Indexierung anstoßen — sonst dauert es Wochen.
+- [ ] Nach ein bis zwei Wochen prüfen, ob die Seite unter „Leistung" Impressionen sammelt.
+
+### Wenn später eine eigene Domain dazukommt
+
+Der Unterpfad `github.io/KG-Wim-Menzo/` funktioniert, wirkt für eine Praxis aber provisorisch, und GitHub Pages kann von einem Projektpfad nicht sauber weiterleiten. Bei einem Umzug sind es fünf Stellen:
 
 | Datei | Was |
 |---|---|
-| `index.html` | Block „DOMAIN EINTRAGEN" im `<head>` einkommentieren, `DOMAIN-EINTRAGEN.de` ersetzen |
-| `index.html` | im JSON-LD die Felder `url`, `image`, `logo`, `sameAs` ergänzen (Kommentar direkt darunter zeigt genau wie) |
-| `robots.txt` | `Sitemap:`-Zeile einkommentieren und Adresse eintragen |
-| `sitemap.xml` | `<loc>` eintragen, `lastmod` aktualisieren |
+| `index.html` | `canonical`, `og:url`, `og:image` |
+| `index.html` | im JSON-LD `url`, `image`, `logo` in beiden Knoten |
+| `sitemap.xml` | `<loc>` und `<lastmod>` |
+| `robots.txt` | `Sitemap:`-Zeile |
+| Search Console | neue Property anlegen, Adressänderung melden |
 
-Bis dahin bleiben diese Angaben bewusst leer: Eine `canonical`-Angabe, die auf eine nicht existierende Domain zeigt, schadet der Auffindbarkeit mehr, als eine fehlende nützt.
-
-Danach:
-
-- [ ] Website über HTTPS erreichbar machen (ohne Verschlüsselung stuft Google ab).
-- [ ] [Google Search Console](https://search.google.com/search-console) einrichten, Domain bestätigen, `sitemap.xml` einreichen.
-- [ ] Über „URL-Prüfung" die Indexierung anstoßen — sonst dauert es Wochen.
+**Wichtig:** Solange die alte Adresse in `canonical` steht, verweist auch die neue Domain dauerhaft auf `github.io` — Google würde dann weiterhin die alte Adresse ranken.
 
 ## 3. Falsche Verzeichniseinträge bereinigen
 

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  DOMAIN EINTRAGEN: DOMAIN-EINTRAGEN.de unten durch die echte Adresse ersetzen.
-  lastmod bei jeder inhaltlichen Änderung der Seite mit aktualisieren.
--->
+<!-- lastmod bei jeder inhaltlichen Änderung der Seite mit aktualisieren. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://DOMAIN-EINTRAGEN.de/</loc>
+    <loc>https://lukabpunkt.github.io/KG-Wim-Menzo/</loc>
     <lastmod>2026-08-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
